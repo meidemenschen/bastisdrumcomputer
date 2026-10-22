@@ -1,0 +1,56 @@
+# Baut auf einem Windows-Server von GitHub das Plugin und die Setup-Datei.
+# Ergebnis: unter "Actions" -> letzter Lauf -> "Artifacts" herunterladen.
+# Bei einem Tag wie v0.1.0 wird die Setup-Datei zusaetzlich als Release angehaengt.
+name: Windows-Installer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version aus CMakeLists.txt lesen
+        id: ver
+        shell: pwsh
+        run: |
+          $m = Select-String -Path CMakeLists.txt -Pattern 'project\(BastisDrumcomputer VERSION ([0-9.]+)'
+          "version=$($m.Matches[0].Groups[1].Value)" >> $env:GITHUB_OUTPUT
+
+      - name: Konfigurieren
+        run: cmake -B build -A x64
+
+      - name: Bauen
+        run: cmake --build build --config Release --parallel
+
+      - name: Inno Setup bereitstellen
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup -y --no-progress
+          }
+
+      - name: Setup-Datei erzeugen
+        shell: pwsh
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ steps.ver.outputs.version }}" Installer\BastisDrumcomputer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BastisDrumcomputer-Setup-${{ steps.ver.outputs.version }}
+          path: Installer/Output/*.exe
+
+      - name: Release anhaengen
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Installer/Output/*.exe
