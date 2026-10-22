@@ -14,7 +14,7 @@
 #define AppName      "Bastis Drumcomputer"
 #define AppPublisher "Basti"
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "0.1.1"
 #endif
 #ifndef BuildDir
   #define BuildDir "..\build\BastisDrumcomputer_artefacts\Release"
