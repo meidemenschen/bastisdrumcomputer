@@ -74,7 +74,8 @@ Die Setup-Datei lässt sich auf zwei Wegen erzeugen:
 1. Den Projektordner als GitHub-Repository hochladen (inkl. des versteckten Ordners `.github`).
 2. Unter "Actions" läuft "Windows-Installer" bei jedem Push automatisch (oder per "Run workflow").
 3. Nach ca. 10 bis 15 Minuten die Setup-Datei im Lauf unter "Artifacts" herunterladen.
-4. Optional: Einen Tag wie `v0.1.0` pushen, dann hängt die Setup-Datei direkt an einem GitHub-Release zum Verteilen.
+4. Zum Weitergeben: Jeder Build auf `main` legt die Setup-Datei zusätzlich öffentlich im GitHub-Release `v<Version>` ab
+   (Seite "Releases" im Repository). Für eine neue Version die Versionsnummer in der CMakeLists.txt erhöhen.
 
 **B) Auf einem Windows-PC**
 1. Visual Studio 2022 (Workload "Desktopentwicklung mit C++"), CMake, Git und [Inno Setup 6](https://jrsoftware.org/isdl.php) installieren.

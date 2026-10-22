@@ -1,6 +1,7 @@
 # Baut auf einem Windows-Server von GitHub das Plugin und die Setup-Datei.
 # Ergebnis: unter "Actions" -> letzter Lauf -> "Artifacts" herunterladen.
-# Bei einem Tag wie v0.1.0 wird die Setup-Datei zusaetzlich als Release angehaengt.
+# Zusaetzlich landet die Setup-Datei als oeffentlicher Download im GitHub-Release
+# "v<Version>" (Version aus der CMakeLists.txt). Neue Version = Release mit neuem Namen.
 name: Windows-Installer
 
 on:
@@ -50,7 +51,14 @@ jobs:
           path: Installer/Output/*.exe
 
       - name: Release anhaengen
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: Bastis Drumcomputer ${{ steps.ver.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          body: |
+            Windows: `BastisDrumcomputer-Setup-${{ steps.ver.outputs.version }}.exe` herunterladen und per Doppelklick installieren.
+            Das VST3 landet in `C:\Program Files\Common Files\VST3`, die Standalone-App im Startmenue.
+            Hinweis: Die Datei ist nicht signiert. Bei der SmartScreen-Warnung auf "Weitere Informationen" und dann "Trotzdem ausfuehren" klicken.
           files: Installer/Output/*.exe
