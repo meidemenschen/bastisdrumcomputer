@@ -64,6 +64,8 @@ namespace basti::ui
 
         textPath.clear();
         glyphs.createPath (textPath);
+
+        cache = {};
     }
 
     void LogoComponent::paint (juce::Graphics& g)
@@ -71,6 +73,30 @@ namespace basti::ui
         if (textPath.isEmpty())
             return;
 
+        // Das Logo wird einmal mit dem Software-Renderer in ein Bild gezeichnet und
+        // dann nur noch geblittet. Der Direct2D-Renderer von JUCE 8 (Windows) fuellt
+        // den Pfad mit dem Mehrfarb-Verlauf sonst nicht, uebrig blieben nur Schatten
+        // und dunkle Kontur. So sieht das Logo auf allen Systemen gleich aus.
+        const auto scale = juce::jmax (1.0f, g.getInternalContext().getPhysicalPixelScaleFactor());
+
+        if (! cache.isValid() || ! juce::approximatelyEqual (cacheScale, scale))
+        {
+            cacheScale = scale;
+            cache = juce::Image (juce::Image::ARGB,
+                                 juce::roundToInt (std::ceil ((float) getWidth()  * scale)),
+                                 juce::roundToInt (std::ceil ((float) getHeight() * scale)),
+                                 true, juce::SoftwareImageType());
+
+            juce::Graphics ig (cache);
+            ig.addTransform (juce::AffineTransform::scale (scale));
+            paintMetal (ig);
+        }
+
+        g.drawImage (cache, getLocalBounds().toFloat());
+    }
+
+    void LogoComponent::paintMetal (juce::Graphics& g) const
+    {
         const auto b = textPath.getBounds();
 
         // 1) weicher Schlagschatten
