@@ -44,7 +44,7 @@ namespace basti
         switch (instrument)
         {
             case Kick:      return { ids::pitch, ids::decay, ids::tone };
-            case Snare:     return { ids::tune, ids::tone, ids::snappy };
+            case Snare:     return { ids::tune, ids::decay, ids::tone, ids::snappy };
             case Clap:      return { ids::tone, ids::decay };
             case ClosedHat: return { ids::tone, ids::decay };
             case OpenHat:   return { ids::tone, ids::decay };
@@ -101,7 +101,7 @@ namespace basti
             switch (instrument)
             {
                 case Kick:      return { 0.05f, 2.5f,  0.5f,  0.6f,   0.0f  };
-                case Snare:     return { 0.05f, 1.0f,  0.25f, 0.25f,  0.0f  };
+                case Snare:     return { 0.05f, 1.0f,  0.2f,  0.2f,   0.0f  };
                 case Clap:      return { 0.05f, 1.0f,  0.3f,  0.3f,   0.1f  };
                 case ClosedHat: return { 0.01f, 0.25f, 0.06f, 0.05f, -0.2f  };
                 case OpenHat:   return { 0.1f,  2.0f,  0.5f,  0.45f, -0.2f  };

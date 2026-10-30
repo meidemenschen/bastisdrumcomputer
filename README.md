@@ -94,7 +94,7 @@ Wegbekommen lässt sich das nur mit einem Code-Signing-Zertifikat.
 | Instrument | Synthese | Regler |
 |---|---|---|
 | Kick | Sinus mit schneller Pitch-Hüllkurve (Sweep), exponentieller Decay, Klick-Transient durch Tone-Tiefpass, sanfte Sättigung bei Accent | Pitch, Decay, Tone |
-| Snare | Zwei gestimmte Sinus-Körper (185/330 Hz) mit leichtem Pitch-Drop + hochpassgefiltertes Rauschen | Tune, Tone, Snappy |
+| Snare | Zwei gestimmte Sinus-Körper (185/330 Hz) mit leichtem Pitch-Drop + hochpassgefiltertes Rauschen | Tune, Decay, Tone, Snappy |
 | Clap | 4 Rausch-Bursts im Abstand von ca. 10 ms durch einen Bandpass, danach eine abklingende Rauschfahne | Tone, Decay |
 | Closed/Open Hat | 6 frei laufende, verstimmte Rechteck-Oszillatoren (PolyBLEP, Schmitt-Trigger-Netzwerk-Emulation) → 2 Bandpässe → Hochpass → VCA. Closed Hat würgt die Open Hat ab | Tone, Decay |
 | Low/Mid/High Tom | Gedämpfter Resonator (rotierender Zeiger, per Impuls angestoßen) mit Pitch-Abfall, im Tom-Modus mit etwas Rauschen. Umschaltbar auf Conga (höher, kürzer, klarer) | Tune, Decay, Mode |
