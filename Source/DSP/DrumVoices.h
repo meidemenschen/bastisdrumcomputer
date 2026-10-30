@@ -111,11 +111,12 @@ namespace basti::dsp
 
     //==========================================================================
     /** Snare: zwei gestimmte, gedaempfte Sinus-Koerper + hochpassgefiltertes
-        Rauschen ("Snappy"). Tone verschiebt Koerper-Balance und Rauschfarbe. */
+        Rauschen ("Snappy"). Tone verschiebt Koerper-Balance und Rauschfarbe,
+        Decay streckt/staucht Koerper und Rauschfahne gemeinsam. */
     class SnareVoice final : public DrumVoice
     {
     public:
-        struct Params { float tune = 0.0f, tone = 0.5f, snappy = 0.6f; };
+        struct Params { float tune = 0.0f, decay = 0.2f, tone = 0.5f, snappy = 0.6f; };
         void setParams (const Params& p) noexcept { params = p; }
 
         void reset() override
@@ -139,10 +140,13 @@ namespace basti::dsp
             body1Gain = 0.9f - 0.5f * params.tone;
             body2Gain = 0.3f + 0.6f * params.tone;
 
-            env1.setDecayTime (0.20f, sampleRate);  env1.trigger();
-            env2.setDecayTime (0.12f, sampleRate);  env2.trigger();
+            // Decay 0.2 s entspricht dem bisherigen Grundklang
+            const auto decayScale = params.decay / 0.2f;
 
-            noiseEnv.setDecayTime (0.12f + 0.18f * params.snappy, sampleRate);
+            env1.setDecayTime (0.20f * decayScale, sampleRate);  env1.trigger();
+            env2.setDecayTime (0.12f * decayScale, sampleRate);  env2.trigger();
+
+            noiseEnv.setDecayTime ((0.12f + 0.18f * params.snappy) * decayScale, sampleRate);
             noiseEnv.trigger (params.snappy * 1.4f);
 
             hp.setParameters (900.0f + 2600.0f * params.tone, 0.7f, sampleRate);

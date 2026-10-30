@@ -14,9 +14,9 @@ namespace basti
             p.pan   = state.getRawParameterValue (paramId (i, ids::pan));
 
             const auto suffixes = getSynthParamSuffixes (i);
-            std::atomic<float>** slots[] = { &p.a, &p.b, &p.c };
+            std::atomic<float>** slots[] = { &p.a, &p.b, &p.c, &p.d };
 
-            for (int s = 0; s < suffixes.size() && s < 3; ++s)
+            for (int s = 0; s < suffixes.size() && s < 4; ++s)
                 *slots[s] = state.getRawParameterValue (paramId (i, suffixes[s]));
 
             jassert (p.level != nullptr && p.pan != nullptr && p.a != nullptr);
@@ -53,7 +53,7 @@ namespace basti
         kick.setParams ({ kp.a->load(), kp.b->load(), kp.c->load() });            // pitch, decay, tone
 
         const auto& sp = params[Snare];
-        snare.setParams ({ sp.a->load(), sp.b->load(), sp.c->load() });          // tune, tone, snappy
+        snare.setParams ({ sp.a->load(), sp.b->load(), sp.c->load(), sp.d->load() }); // tune, decay, tone, snappy
 
         const auto& cp = params[Clap];
         clap.setParams ({ cp.a->load(), cp.b->load() });                         // tone, decay

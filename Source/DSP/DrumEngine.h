@@ -68,6 +68,7 @@ namespace basti
             std::atomic<float>* a     = nullptr;   // erster Synth-Parameter
             std::atomic<float>* b     = nullptr;   // zweiter
             std::atomic<float>* c     = nullptr;   // dritter (optional)
+            std::atomic<float>* d     = nullptr;   // vierter (optional)
         };
 
         std::array<InstrumentParams, numInstruments> params {};
